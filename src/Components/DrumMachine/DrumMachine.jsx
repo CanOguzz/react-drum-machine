@@ -117,25 +117,67 @@ const firstSoundsGroup = [
 
   const secondSoundsGroup = [];
 
-const Keyboard = ({play}) => {
+  const soundName ={
+heaterKit: "Heater Kit",    
+smoothPianoKit: "Smooth Piano Kit"
+  }
 
-    return firstSoundsGroup.map(sound => {
-        return <button className="drum-pad" onClick={() => play(sound.keyTrigger)}>
-            <audio className="clip" src={sound.url} id={sound.keyTrigger}></audio>
-            {sound.keyTrigger}
-        </button>
-    })
+  const soundsGroup={
+    heaterKit: firstSoundsGroup,
+    smoothPianoKit:secondSoundsGroup
+  }
+
+const KeyboardKey = ({play, sound:{keyTrigger,url}})=>{
+
+    const handleKeydown = (e) => {
+        if (e.keyCode === keyTrigger.charCodeAt(0)) {
+            play(keyTrigger);
+        }
+    };
+
+    React.useEffect(() => {
+        document.addEventListener('keydown', handleKeydown);
+    }, []);
+    return (
+    <button className="drum-pad" onClick={() => play(keyTrigger)}>
+        <audio className="clip" src={url} id={keyTrigger}></audio>
+        {keyTrigger}
+    </button>
+)
 }
 
-const play = (key) => {
-    const audio = document.getElementById(key);
-    audio.currentTime = 0;
-    audio.play();
+const Keyboard = ({play,sounds}) => {
+
+    return sounds.map((sound) => <KeyboardKey play={play} sound={sound}/>
+         
+    )
 }
+
+const DrumControle = ({changeSoundGroup}) => {
+    return(
+    <div className="controle">
+        <button onClick={changeSoundGroup}>Change Sound Group</button>
+    </div>
+    )};
 
 const DrumMachine = () => {
+
+    const [sounds, setSounds] = React.useState(firstSoundsGroup);   
+
+    
+    const play = (key) => {
+        const audio = document.getElementById(key);
+        audio.currentTime = 0;
+        audio.play().catch(error => console.error("playback error: ", error));
+    }
+
+    const changeSoundGroup = () => { 
+
+    }  ;
+
     return <div id="drum-machine">
-    <Keyboard play={play}/>
+    <Keyboard play={play} sounds={sounds}/>
+    <DrumControle changeSoundGroup={changeSoundGroup}/>
     </div>;
 };
 
