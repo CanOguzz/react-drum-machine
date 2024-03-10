@@ -127,7 +127,7 @@ const soundsGroup = {
 
 const KeyboardKey = ({ play, sound: { keyTrigger, url } }) => {
   const handleKeydown = (e) => {
-    if (e.keyCode === keyTrigger) {
+    if (e.keyCode === keyTrigger.charCodeAt(0)) {
       play(keyTrigger);
     }
   };
