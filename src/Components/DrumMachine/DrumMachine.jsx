@@ -117,18 +117,27 @@ const firstSoundsGroup = [
 
   const secondSoundsGroup = [];
 
-const Keyboard = () => {
+const Keyboard = ({play}) => {
+
     return firstSoundsGroup.map(sound => {
-        return <button>
-            <audio src={sound.url} ></audio>
+        return <button className="drum-pad" onClick={() => play(sound.keyTrigger)}>
+            <audio className="clip" src={sound.url} id={sound.keyTrigger}></audio>
             {sound.keyTrigger}
         </button>
     })
 }
 
+const play = (key) => {
+    const audio = document.getElementById(key);
+    audio.currentTime = 0;
+    audio.play();
+}
+
 const DrumMachine = () => {
     return <div id="drum-machine">
-    <Keyboard />
+    <Keyboard play={play}/>
     </div>;
 };
+
+
 export default DrumMachine
