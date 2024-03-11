@@ -159,10 +159,14 @@ const Keyboard = ({ play, sounds }) => {
   );
 };
 
-const DrumControle = ({ name, changeSoundGroup, volume, handleVolumeChange }) => {
+const DrumControle = ({
+  name,
+  changeSoundGroup,
+  volume,
+  handleVolumeChange,
+}) => {
   return (
     <div className="controle">
-     
       <input
         max="1"
         min="0"
@@ -178,9 +182,14 @@ const DrumControle = ({ name, changeSoundGroup, volume, handleVolumeChange }) =>
 };
 
 const DrumMachine = () => {
+  const [volume, setVolume] = React.useState(1);
   const [soundName, setSoundName] = React.useState("");
   const [soundType, setSoundType] = React.useState("heaterKit");
   const [sounds, setSounds] = React.useState(soundsGroup[soundType]);
+
+  const handleVolumeChange = (e) => {
+    setVolume(e.target.value);
+  };
 
   const play = (key, sound) => {
     setSoundName(sound);
@@ -202,11 +211,23 @@ const DrumMachine = () => {
     }
   };
 
+  const setKeyVolume = (key) => {
+    const audios = sounds.map((sound) => document.getElementById(sound.keyTrigger));
+    audios.forEach(audio => {
+      if(audio) {
+        audio.volume = volume;
+      }
+    });
+  };
+
   return (
     <div id="drum-machine">
+      {setKeyVolume()}
       <div className="wrapper">
         <Keyboard play={play} sounds={sounds} />
         <DrumControle
+          volume={volume}
+          handleVolumeChange={handleVolumeChange}
           name={soundName || soundsName[soundType]}
           changeSoundGroup={changeSoundGroup}
         />
