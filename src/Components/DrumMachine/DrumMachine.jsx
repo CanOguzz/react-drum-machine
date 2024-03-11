@@ -159,16 +159,17 @@ const Keyboard = ({ play, sounds }) => {
   );
 };
 
-const DrumControle = ({ changeSoundGroup }) => {
+const DrumControle = ({ name,changeSoundGroup }) => {
   return (
     <div className="controle">
-      <h2 id="display">asd</h2>
+      <h2 id="display">{name}</h2>
       <button onClick={changeSoundGroup}>Change Sound Group</button>
     </div>
   );
 };
 
 const DrumMachine = () => {
+  const [soundName, setSoundName] = React.useState("");
   const [soundType, setSoundType] = React.useState("heaterKit");
   const [sounds, setSounds] = React.useState(soundsGroup[soundType]);
 
@@ -194,7 +195,7 @@ const DrumMachine = () => {
     <div id="drum-machine">
       <div className="wrapper">
         <Keyboard play={play} sounds={sounds} />
-        <DrumControle changeSoundGroup={changeSoundGroup} />
+        <DrumControle name={soundsName[soundType]}changeSoundGroup={changeSoundGroup} />
       </div>
     </div>
   );
