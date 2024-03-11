@@ -125,7 +125,7 @@ const soundsGroup = {
   smoothPianoKit: secondSoundsGroup,
 };
 
-const KeyboardKey = ({ play, sound: { id,keyTrigger, url } }) => {
+const KeyboardKey = ({ keyCode, play, sound: { id, keyTrigger, url } }) => {
   const handleKeydown = (e) => {
     if (e.keyCode === keyTrigger.charCodeAt(0)) {
       play(keyTrigger, id);
@@ -140,8 +140,13 @@ const KeyboardKey = ({ play, sound: { id,keyTrigger, url } }) => {
   }, []);
 
   return (
-    <button className="drum-pad" onClick={() => play(keyTrigger,id)}>
-      <audio className="clip" src={url} id={keyTrigger}></audio>
+    <button id={id}
+      value="test"
+      
+      className="drum-pad"
+      onClick={() => play(keyTrigger, id)}
+    >
+      <audio className="clip" src={url} id={keyTrigger} />
       {keyTrigger}
     </button>
   );
@@ -159,9 +164,22 @@ const Keyboard = ({ play, sounds }) => {
   );
 };
 
-const DrumControle = ({ name,changeSoundGroup }) => {
+const DrumControle = ({
+  name,
+  changeSoundGroup,
+  volume,
+  handleVolumeChange,
+}) => {
   return (
     <div className="controle">
+      <input
+        max="1"
+        min="0"
+        step="0.01"
+        type="range"
+        value={volume}
+        onChange={handleVolumeChange}
+      />
       <h2 id="display">{name}</h2>
       <button onClick={changeSoundGroup}>Change Sound Group</button>
     </div>
@@ -169,9 +187,14 @@ const DrumControle = ({ name,changeSoundGroup }) => {
 };
 
 const DrumMachine = () => {
+  const [volume, setVolume] = React.useState(1);
   const [soundName, setSoundName] = React.useState("");
   const [soundType, setSoundType] = React.useState("heaterKit");
   const [sounds, setSounds] = React.useState(soundsGroup[soundType]);
+
+  const handleVolumeChange = (e) => {
+    setVolume(e.target.value);
+  };
 
   const play = (key, sound) => {
     setSoundName(sound);
@@ -193,11 +216,28 @@ const DrumMachine = () => {
     }
   };
 
+  const setKeyVolume = (key) => {
+    const audios = sounds.map((sound) =>
+      document.getElementById(sound.keyTrigger)
+    );
+    audios.forEach((audio) => {
+      if (audio) {
+        audio.volume = volume;
+      }
+    });
+  };
+
   return (
     <div id="drum-machine">
+      {setKeyVolume()}
       <div className="wrapper">
         <Keyboard play={play} sounds={sounds} />
-        <DrumControle name={soundName || soundsName[soundType]}changeSoundGroup={changeSoundGroup} />
+        <DrumControle
+          volume={volume}
+          handleVolumeChange={handleVolumeChange}
+          name={soundName || soundsName[soundType]}
+          changeSoundGroup={changeSoundGroup}
+        />
       </div>
     </div>
   );
