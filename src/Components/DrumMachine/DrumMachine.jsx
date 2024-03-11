@@ -125,7 +125,7 @@ const soundsGroup = {
   smoothPianoKit: secondSoundsGroup,
 };
 
-const KeyboardKey = ({ play, sound: { id,keyTrigger, url } }) => {
+const KeyboardKey = ({ play, sound: { id, keyTrigger, url } }) => {
   const handleKeydown = (e) => {
     if (e.keyCode === keyTrigger.charCodeAt(0)) {
       play(keyTrigger, id);
@@ -140,7 +140,7 @@ const KeyboardKey = ({ play, sound: { id,keyTrigger, url } }) => {
   }, []);
 
   return (
-    <button className="drum-pad" onClick={() => play(keyTrigger,id)}>
+    <button className="drum-pad" onClick={() => play(keyTrigger, id)}>
       <audio className="clip" src={url} id={keyTrigger}></audio>
       {keyTrigger}
     </button>
@@ -159,9 +159,18 @@ const Keyboard = ({ play, sounds }) => {
   );
 };
 
-const DrumControle = ({ name,changeSoundGroup }) => {
+const DrumControle = ({ name, changeSoundGroup, volume, handleVolumeChange }) => {
   return (
     <div className="controle">
+     
+      <input
+        max="1"
+        min="0"
+        step="0.01"
+        type="range"
+        value={volume}
+        onChange={handleVolumeChange}
+      />
       <h2 id="display">{name}</h2>
       <button onClick={changeSoundGroup}>Change Sound Group</button>
     </div>
@@ -197,7 +206,10 @@ const DrumMachine = () => {
     <div id="drum-machine">
       <div className="wrapper">
         <Keyboard play={play} sounds={sounds} />
-        <DrumControle name={soundName || soundsName[soundType]}changeSoundGroup={changeSoundGroup} />
+        <DrumControle
+          name={soundName || soundsName[soundType]}
+          changeSoundGroup={changeSoundGroup}
+        />
       </div>
     </div>
   );
