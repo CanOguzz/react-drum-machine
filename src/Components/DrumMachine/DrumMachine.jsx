@@ -125,10 +125,10 @@ const soundsGroup = {
   smoothPianoKit: secondSoundsGroup,
 };
 
-const KeyboardKey = ({ play, sound: { keyTrigger, url } }) => {
+const KeyboardKey = ({ play, sound: { id,keyTrigger, url } }) => {
   const handleKeydown = (e) => {
     if (e.keyCode === keyTrigger.charCodeAt(0)) {
-      play(keyTrigger);
+      play(keyTrigger, id);
     }
   };
 
@@ -140,7 +140,7 @@ const KeyboardKey = ({ play, sound: { keyTrigger, url } }) => {
   }, []);
 
   return (
-    <button className="drum-pad" onClick={() => play(keyTrigger)}>
+    <button className="drum-pad" onClick={() => play(keyTrigger,id)}>
       <audio className="clip" src={url} id={keyTrigger}></audio>
       {keyTrigger}
     </button>
@@ -173,13 +173,15 @@ const DrumMachine = () => {
   const [soundType, setSoundType] = React.useState("heaterKit");
   const [sounds, setSounds] = React.useState(soundsGroup[soundType]);
 
-  const play = (key) => {
+  const play = (key, sound) => {
+    setSoundName(sound);
     const audio = document.getElementById(key);
     audio.currentTime = 0;
     audio.play().catch((error) => console.error("playback error: ", error));
   };
 
   const changeSoundGroup = () => {
+    setSoundName("");
     if (soundType === "heaterKit") {
       console.log("smoothPianoKit sounds:", soundsGroup.smoothPianoKit);
       setSoundType("smoothPianoKit");
@@ -195,7 +197,7 @@ const DrumMachine = () => {
     <div id="drum-machine">
       <div className="wrapper">
         <Keyboard play={play} sounds={sounds} />
-        <DrumControle name={soundsName[soundType]}changeSoundGroup={changeSoundGroup} />
+        <DrumControle name={soundName || soundsName[soundType]}changeSoundGroup={changeSoundGroup} />
       </div>
     </div>
   );
