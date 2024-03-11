@@ -125,7 +125,7 @@ const soundsGroup = {
   smoothPianoKit: secondSoundsGroup,
 };
 
-const KeyboardKey = ({ play, sound: { id, keyTrigger, url } }) => {
+const KeyboardKey = ({ keyCode,play, sound: { id, keyTrigger, url } }) => {
   const handleKeydown = (e) => {
     if (e.keyCode === keyTrigger.charCodeAt(0)) {
       play(keyTrigger, id);
@@ -140,10 +140,10 @@ const KeyboardKey = ({ play, sound: { id, keyTrigger, url } }) => {
   }, []);
 
   return (
-    <button className="drum-pad" onClick={() => play(keyTrigger, id)}>
-      <audio className="clip" src={url} id={keyTrigger}></audio>
-      {keyTrigger}
-    </button>
+    <button value="test" id={keyCode} className="drum-pad" onClick={() => play(keyTrigger, id)}>
+    <audio className="clip" src={url} id={keyTrigger} />
+    {keyTrigger}
+  </button>
   );
 };
 
